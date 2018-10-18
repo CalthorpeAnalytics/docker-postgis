@@ -1,8 +1,8 @@
-FROM postgres:10-alpine
+FROM postgres:9.6-alpine
 MAINTAINER Régis Belson <me@regisbelson.fr>
 
-ENV POSTGIS_VERSION 2.4.3
-ENV POSTGIS_SHA256 b9754c7b9cbc30190177ec34b570717b2b9b88ed271d18e3af68eca3632d1d95
+ENV POSTGIS_VERSION 2.5.0
+ENV POSTGIS_SHA256 35169b7eb733262ae557097e3a68dc9d5b35484e875c37b4fd3372fcc80c39b9
 
 RUN set -ex \
     \
@@ -31,6 +31,10 @@ RUN set -ex \
         make \
         perl \
     \
+    # add libcrypto from (edge:main) for gdal-2.3.0
+    && apk add --no-cache --virtual .crypto-rundeps \
+        --repository http://dl-cdn.alpinelinux.org/alpine/edge/main \
+        libressl2.7-libcrypto \
     && apk add --no-cache --virtual .build-deps-testing \
         --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing \
         gdal-dev \
